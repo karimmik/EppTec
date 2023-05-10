@@ -6,25 +6,44 @@
   
 ![](https://github.com/karimmik/EppTec/blob/main/Datov%C3%BD%20model/Bank%20model.png)
 
-# SQL dotaz na klienty pro něž suma jistin na konci měsice je vetší než číslo c
+> ## Postavte dotaz, který vybere všechny klienty (např. id_klient, jméno a příjmení) pro něž bude platit, že suma jistin všech jejich účtů na konci měsíce bude větší než číslo c.
 Takový dotaz v MS SQL by mohl vypadat jako:
 ```
 Select ClientID, 
        Name, 
        Surname,
-       TotalAmount
+       TotalCreditAmount
   
   from (
        Select Account.ClientID as ClientID,
-              SUM(CreditBalance.Amount) as TotalAmount
+              SUM(CreditBalance.Amount) as TotalCreditAmount
               
          from Account
    inner join CreditBalance on ( (CreditBalance.AcountID = Account.ID) and (EOMONTH(GETDATE()) = CreditBalance.Date) )
      group by Account.ID
 
   ) tmp 
-  inner join Client on ( (Client.ID = tmp.ClientID) and (tmp.TotalAmount > c))
+  inner join Client on ( (Client.ID = tmp.ClientID) and (tmp.TotalCreditAmount > c))
 ```
 
-# SQL dotaz na 10 klientů s maximální celkovou výší pohledávky (suma všech pohledávek klienta) k ultimu měsíce s zobrazením celkové výší pohledávky
-Takový dotaz v MS SQL by mohl vypadat jako:
+> ## Postavte dotaz, který zobrazí 10 klientů s maximální celkovou výší pohledávky (suma všech pohledávek klienta) k ultimu měsíce a tuto na konci řádku vždy zobrazte.
+Takový dotaz v MS SQL by mohl vypadat podobně za vyjimkou násobení částky procentem pohledávky a dodatečným setříděním:
+```
+Select TOP 10 
+       ClientID, 
+       Name, 
+       Surname,
+       TotalBruttoCreditAmount
+  
+  from (
+       Select Account.ClientID as ClientID,
+              SUM(CreditBalance.Amount * CreditBalance.Interest) as TotalBruttoCreditAmount
+              
+         from Account
+   inner join CreditBalance on ( (CreditBalance.AcountID = Account.ID) and (EOMONTH(GETDATE()) = CreditBalance.Date) )
+     group by Account.ID
+
+  ) tmp 
+  inner join Client on ( (Client.ID = tmp.ClientID) )
+  order by TotalBruttoCreditAmount DESC
+```
