@@ -7,7 +7,7 @@
  Knihovna  obsahuje zakladní sadu pravidel pro třidění seznamu řetězců, kam lze zapisovat funkce s návratovou hodnotou typu boolean pro filtrování
 
 ## Popis příkladu
- Příklad v main.py vytřídí ze seznamu řetězců palindromy neobsahujicí pisměno *A*. Složitost je *O(nm)*, kde *m* je počet pravidel a *n* je počet prvků.
+ Příklad v main.py vytřídí ze seznamu řetězců palindromy neobsahujicí písmeno *A*. Složitost je *O(nm)*, kde *m* je počet pravidel a *n* je počet prvků.
 ```
 # Example of test list
 test_list = {"Nun", "Taco cat", "No lemon, no melon", "Never odd or even", "Not a palindrome"}
